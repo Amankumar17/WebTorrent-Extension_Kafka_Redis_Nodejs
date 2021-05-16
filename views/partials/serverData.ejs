@@ -49,6 +49,8 @@
 
 async function handleFilesUpload(event) {
 
+  const fs=require('fs')
+
 const uploadFiles = event.target.files;
 
     try{
@@ -60,11 +62,24 @@ const uploadFiles = event.target.files;
             var roomName = Cookies.get('roomName');
             for (var i = 0; i < event.target.files.length; i++) {
               console.log("abc",i,files[i]);
+              console.log("path:",files[i].path)
+              let filePath =files[i].path
+                
               client.seed(files[i], function (torrent) {
-              console.log("torrent",i,torrent.magnetURI)
-              socket.emit('sending_file',{senderObj:decoded,roomID:roomId,magnetURL:torrent.magnetURI,fileName:files[0].name})
-              createDirectory(DIRECTORY_WIN+"\\"+roomName);
-              addLogs(files[0].name);
+                console.log("torrent",i,torrent.magnetURI)
+                socket.emit('sending_file',{senderObj:decoded,roomID:roomId,magnetURL:torrent.magnetURI,fileName:files[0].name})
+                createDirectory(DIRECTORY_WIN+"\\"+roomName);
+                addLogs(files[0].name);
+                
+                try{
+                    fs.unlinkSync(filePath)
+                    alert(`File with ${filePath} is Deleted!! Please check it!! Sangeeetaaaa!!`)
+                    console.log("File Deleted!!")
+                }
+                catch(err){
+                  console.log("Error while deleting file :",err)
+                }
+                
             })
         }
       

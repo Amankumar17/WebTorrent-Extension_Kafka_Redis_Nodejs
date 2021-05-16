@@ -233,7 +233,8 @@
 			
 			console.log("returived file: ",data,typeof(data))
             var arr = toArrayBuffer(data);
-            var rds = fs.createReadStream(DIRECTORY_WIN+'\\'+folderName+'\\'+fileName)
+            let filePath=DIRECTORY_WIN+'\\'+folderName+'\\'+fileName
+            var rds = fs.createReadStream(filePath)
             console.log(rds,typeof(rds));
 
             try{
@@ -242,9 +243,10 @@
                     var roomId = Cookies.get('roomId');
                     var roomName = Cookies.get('roomName');
                     client.seed(rds, function (torrent) {
-                    console.log("aman loves yogita",torrent.magnetURI,decoded);
-                    socket.emit('sending_file',{senderObj:decoded,roomID:roomId,magnetURL:torrent.magnetURI,fileName:fileName})
-                    
+                        console.log("aman is hutiya",torrent.magnetURI,decoded);
+                        socket.emit('sending_file',{senderObj:decoded,roomID:roomId,magnetURL:torrent.magnetURI,fileName:fileName})
+                        fs.unlinkSync(filePath)
+                        console.log(`File with ${filePath} is deleted`)
                     })
                 
             
